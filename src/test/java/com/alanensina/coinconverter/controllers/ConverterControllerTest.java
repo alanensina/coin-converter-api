@@ -92,4 +92,21 @@ class ConverterControllerTest {
                 .andExpect(jsonPath("$.CENTS").value(0));
     }
 
+    @Test
+    @DisplayName("Returns 400 status code because the input is < 1")
+    void shouldReturn400StatusForZeroCentsInput() throws Exception {
+        int input = 0;
+
+        mockMvc.perform(get(BASE_URL + CONVERT_CURRENCY + input)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+
+        mockMvc.perform(get(BASE_URL + CONVERT_CURRENCY_TO_BILLS + input)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+
+        mockMvc.perform(get(BASE_URL + CONVERT_CURRENCY_TO_COINS + input)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
 }
