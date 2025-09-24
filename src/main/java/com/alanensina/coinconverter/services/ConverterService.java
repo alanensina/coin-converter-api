@@ -5,7 +5,6 @@ import com.alanensina.coinconverter.dtos.CurrencyBillsResponseDTO;
 import com.alanensina.coinconverter.dtos.CurrencyCoinsResponseDTO;
 import com.alanensina.coinconverter.enums.BillEnum;
 import com.alanensina.coinconverter.enums.CoinEnum;
-import jakarta.validation.constraints.Min;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumMap;
@@ -17,12 +16,10 @@ import static com.alanensina.coinconverter.enums.CoinEnum.*;
 public class ConverterService {
 
     public CurrencyBillsAndCoinsResponseDTO convertCurrency(int cents) {
-
-        int remaining = cents;
         var billCounter = new EnumMap<BillEnum, Integer>(BillEnum.class);
         var coinsCounter = new EnumMap<CoinEnum, Integer>(CoinEnum.class);
 
-        remaining = parseBills(remaining, billCounter);
+        var remaining = parseBills(cents, billCounter);
         parseCoins(remaining, coinsCounter);
 
         return new CurrencyBillsAndCoinsResponseDTO(
@@ -41,12 +38,10 @@ public class ConverterService {
         );
     }
 
-    public CurrencyCoinsResponseDTO convertCurrencyToCoins(@Min(1) int cents) {
-
-        int remaining = cents;
+    public CurrencyCoinsResponseDTO convertCurrencyToCoins(int cents) {
         var coinsCounter = new EnumMap<CoinEnum, Integer>(CoinEnum.class);
 
-        parseCoins(remaining, coinsCounter);
+        parseCoins(cents, coinsCounter);
 
         return new CurrencyCoinsResponseDTO(
                 coinsCounter.get(DOLLAR),
@@ -58,11 +53,10 @@ public class ConverterService {
         );
     }
 
-    public CurrencyBillsResponseDTO convertCurrencyToBills(@Min(1) int cents) {
-        int remaining = cents;
+    public CurrencyBillsResponseDTO convertCurrencyToBills(int cents) {
         var billCounter = new EnumMap<BillEnum, Integer>(BillEnum.class);
 
-        remaining = parseBills(remaining, billCounter);
+        var remaining = parseBills(cents, billCounter);
 
         return new CurrencyBillsResponseDTO(
                 billCounter.get(HUNDRED),
